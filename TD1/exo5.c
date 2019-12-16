@@ -5,28 +5,40 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+int pid1, pid2;
+
 void handler (int numero){
-	if(numero == SIGUSR2){
-		kill(getpid(), SIGUSR2);
+	printf("%d", numero);
+	if(numero == SIGUSR1){
+		printf("Killing %d", getpid());
+		kill(pid1, SIGUSR2);
 	} else {
-		kill(getpid(), SIGKILL);
+		printf("Killing Sub %d", getpid());
+		kill(pid1,SIGKILL);
 	}
 
 }
 
 int main (void)
 {
-        int i;
-	int f = fork();
-	if(f != 0){
-		i = fork();
-		if(i == 0) {
-			signal(SIGUSR2, handler);
-		} else {
-			kill(i, SIGUSR1);
-		}
-	} else {
+	pid1 = fork();
+	if(pid1 == -1) {
+		printf("Error\n");
+		exit(-1);
+	} else if(pid1 == 0) {
 		signal(SIGUSR2, handler);
-		wait(NULL);
+		pause();
+	} else {
+		pid2 = fork();
+		if(pid2 == -1){
+			printf("Error\n");
+			exit(-1);
+		} else if(pid2 == 0){
+			signal(SIGUSR1, handler);
+			pause();
+		} else {
+			sleep(2);
+			kill(pid2, SIGUSR1);
+		}
 	}
 }
