@@ -7,7 +7,9 @@
 
 pthread_t thread[CORE * 2];
 
-int mat_A[MAX][MAX], mat_B[MAX][MAX], sum[MAX][MAX], sub[MAX][MAX];
+int mat_A[MAX][MAX] = {{1,2},{1,2},{1,2},{1,2}};
+int mat_B[MAX][MAX] = {{2,1},{2,1},{2,1},{2,1}};
+int sum[MAX][MAX];
 
 void* addition(void* arg) {
     int i, j;
@@ -21,12 +23,6 @@ void* addition(void* arg) {
 
 int main() {
     int i, j, step = 0;
-    for (i = 0; i < MAX; i++)  {
-        for (j = 0; j < MAX; j++)  {
-            mat_A[i][j] = rand() % 10;
-            mat_B[i][j] = rand() % 10;
-        }
-    }
     printf("\nMatrice A:\n");
     for (i = 0; i < MAX; i++) {
         for (j = 0; j < MAX; j++) {
